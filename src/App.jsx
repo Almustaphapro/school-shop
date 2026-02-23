@@ -1,55 +1,56 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import SuperDashboard from "./pages/superadmin/SuperDashboard";
+import SuperDashboard from "./pages/SuperDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import SalesShop from "./pages/SalesShop";
-
-function ProtectedRoute({ children, allowedRoles }) {
-  const { isAuthenticated, role } = useSelector((state) => state.auth);
-
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
-  if (!allowedRoles.includes(role)) return <Navigate to="/login" replace />;
-
-  return children;
-}
+import DashboardLayout from "./layouts/DashboardLayout";
+import MyTransactions from "./pages/MyTransactions";
+// Admin Pages
+import StudentList from "./pages/StudentList";
+import ClassStudents from "./pages/ClassStudents";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/login" />} />
-      <Route path="/login" element={<Login />} />
+    <BrowserRouter>
+      <Routes>
+        {/* Public */}
+        <Route path="/" element={<Login />} />
 
-      <Route
-        path="/super-dashboard"
-        element={
-          <ProtectedRoute allowedRoles={["superadmin"]}>
-            <SuperDashboard />
-          </ProtectedRoute>
-        }
-      />
+        {/* Super Admin */}
+        <Route element={<ProtectedRoute allowedRoles={["superadmin"]} />}>
+          <Route path="/super-dashboard" element={<SuperDashboard />} />
+        </Route>
 
-      <Route
-        path="/admin-dashboard"
-        element={
-          <ProtectedRoute allowedRoles={["admin"]}>
-            <AdminDashboard />
-          </ProtectedRoute>
-        }
-      />
+        {/* Admin Section */}
+        <Route element={<ProtectedRoute allowedRoles={["admin", "superadmin"]} />}>
+          <Route path="/admin" element={<DashboardLayout />}>
+            {/* Default dashboard page (/admin) */}
+            <Route index element={<AdminDashboard />} />
 
-      <Route
-        path="/sales/shop"
-        element={
-          <ProtectedRoute allowedRoles={["salesrep"]}>
-            <SalesShop />
-          </ProtectedRoute>
-        }
-      />
+            {/* The Grid of Classes (/admin/student-list) */}
+            <Route path="student-list" element={<StudentList />} />
 
-      <Route path="*" element={<Navigate to="/login" />} />
-    </Routes>
+            {/* Specific Class View (/admin/student-list/JSS1A) */}
+            <Route path="student-list/:className" element={<ClassStudents />} />
+          </Route>
+        </Route>
+
+      {/* Sales */}
+<Route element={<ProtectedRoute allowedRoles={["salesrep"]} />}>
+  <Route path="/sales" element={<DashboardLayout />}>
+
+    {/* Default page when visiting /sales */}
+    <Route index element={<SalesShop />} />
+
+    {/* Explicit routes */}
+    <Route path="shop" element={<SalesShop />} />
+    <Route path="report" element={<MyTransactions />} />
+
+  </Route>
+</Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -1,18 +1,29 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const Login = () => {
+  const { isAuthenticated, role } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     username: "",
     password: "",
   });
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [error, setError] = useState("");
 
-  // Dummy users (for now)
+  // Redirect after login
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     if (role === "superadmin") navigate("/super-dashboard", { replace: true });
+  //     else if (role === "admin") navigate("/admin", { replace: true }); 
+  //     else if (role === "salesrep") navigate("/sales/shop", { replace: true });
+  //   }
+  // }, [isAuthenticated, role, navigate]);
+
   const users = [
     { username: "superadmin", password: "1234", role: "superadmin" },
     { username: "admin", password: "1234", role: "admin" },
@@ -20,36 +31,44 @@ const Login = () => {
   ];
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setError("");
   };
 
-  const handleLogin = () => {
-    const user = users.find(
-      (u) =>
-        u.username === form.username &&
-        u.password === form.password
-    );
+  const handleLogin = (e) => {
+  e.preventDefault();
 
-    if (!user) {
-      alert("Invalid username or password");
-      return;
-    }
+  const user = users.find(
+    (u) =>
+      u.username === form.username.trim() &&
+      u.password === form.password.trim()
+  );
 
-    dispatch(login({ role: user.role, username: user.username }));
+  if (!user) {
+    setError("Invalid username or password");
+    return;
+  }
 
-    // Role-based navigation
-    if (user.role === "superadmin") navigate("/super-dashboard");
-    if (user.role === "admin") navigate("/admin-dashboard");
-    if (user.role === "salesrep") navigate("/sales/shop");
-  };
+  dispatch(login({ role: user.role, username: user.username }));
 
+  // ✅ MANUAL NAVIGATION HERE
+  if (user.role === "superadmin") navigate("/super-dashboard");
+  else if (user.role === "admin") navigate("/admin");
+  else if (user.role === "salesrep") navigate("/sales");
+};
   return (
     <div className="flex h-screen items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 shadow-lg rounded-lg w-80">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white p-8 shadow-lg rounded-lg w-80"
+      >
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+
+        {error && (
+          <div className="bg-red-100 text-red-600 text-sm p-2 mb-4 rounded">
+            {error}
+          </div>
+        )}
 
         <input
           type="text"
@@ -70,12 +89,12 @@ const Login = () => {
         />
 
         <button
-          onClick={handleLogin}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 w-full rounded"
+          type="submit"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 w-full rounded transition"
         >
           Login
         </button>
-      </div>
+      </form>
     </div>
   );
 };
