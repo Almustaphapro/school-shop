@@ -9,6 +9,7 @@ import MyTransactions from "./pages/MyTransactions";
 // Admin Pages
 import StudentList from "./pages/StudentList";
 import ClassStudents from "./pages/ClassStudents";
+import Addstudent from "./pages/Addstudent";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
 
             {/* Specific Class View (/admin/student-list/JSS1A) */}
             <Route path="student-list/:className" element={<ClassStudents />} />
+            <Route path="add-student" element={<Addstudent />} />
           </Route>
         </Route>
 
