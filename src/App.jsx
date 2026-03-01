@@ -6,10 +6,13 @@ import AdminDashboard from "./pages/AdminDashboard";
 import SalesShop from "./pages/SalesShop";
 import DashboardLayout from "./layouts/DashboardLayout";
 import MyTransactions from "./pages/MyTransactions";
+import MyPurchase from "./pages/MyPurchase";
 // Admin Pages
 import StudentList from "./pages/StudentList";
 import ClassStudents from "./pages/ClassStudents";
 import Addstudent from "./pages/Addstudent";
+import StudentInformation from "./pages/StudentInformation";
+
 
 function App() {
   return (
@@ -35,6 +38,8 @@ function App() {
             {/* Specific Class View (/admin/student-list/JSS1A) */}
             <Route path="student-list/:className" element={<ClassStudents />} />
             <Route path="add-student" element={<Addstudent />} />
+            <Route path="student-info" element={<StudentInformation />} />
+            <Route path="purchase" element={<MyPurchase />} />
           </Route>
         </Route>
 

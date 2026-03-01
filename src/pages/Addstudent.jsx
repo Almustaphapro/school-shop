@@ -93,6 +93,13 @@ const handleSubmit = (e) => {
               <option value="JSS1C">JSS 1C</option>
               <option value="JSS1D">JSS 1D</option>
                 <option value="JSS2A">JSS 2A</option>
+                <option value="JSS2B">JSS 2B</option>
+                <option value="JSS2C">JSS 2C</option>
+                <option value="JSS2D">JSS 2D</option>
+                <option value="JSS3A">JSS 3A</option>
+                <option value="JSS3B">JSS 3B</option>
+                <option value="JSS3C">JSS 3C</option>
+                <option value="JSS3D">JSS 3D</option>
             </select>
           </div>
 

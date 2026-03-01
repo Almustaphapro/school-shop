@@ -33,9 +33,33 @@ const studentSlice = createSlice({
       if (student) {
         student.balance = (student.balance || 0) + amount;
       }
+    },
+    withdrawMoney: (state, action) => {
+      const { id, amount, description, items } = action.payload;
+      const student = state.students.find(s => s.id === id);
+      if (student) {
+        student.balance = (student.balance || 0) - amount;
+        // You can add transaction history here if needed
+        // For example:
+        // if (!student.transactions) student.transactions = [];
+        // student.transactions.push({
+        //   date: new Date().toISOString(),
+        //   type: 'withdrawal',
+        //   amount,
+        //   description,
+        //   items
+        // });
+      }
     }
   }
 });
 
-export const { addStudent, updateStudent, toggleStudentStatus, depositMoney } = studentSlice.actions;
+export const { 
+  addStudent, 
+  updateStudent, 
+  toggleStudentStatus, 
+  depositMoney, 
+  withdrawMoney 
+} = studentSlice.actions;
+
 export default studentSlice.reducer;
