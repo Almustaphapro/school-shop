@@ -39,7 +39,7 @@ function App() {
             {/* Specific Class View (/admin/student-list/JSS1A) */}
             <Route path="student-list/:className" element={<ClassStudents />} />
             <Route path="add-student" element={<Addstudent />} />
-            <Route path="student-profile/:id" element={<StudentProfile />} />
+            <Route path="student-profile/:studentId" element={<StudentProfile />} />
             <Route path="student-info" element={<StudentInformation />} />
             <Route path="purchase" element={<MyPurchase />} />
           </Route>

@@ -46,9 +46,13 @@ const ClassStudents = () => {
     alert(`✅ ₦${amount.toLocaleString()} deposited successfully!`);
   };
 
-  const viewProfile = (student) => {
-    navigate(`/admin/student-profile/${student.id}`);
-  };
+  // In ClassStudents.jsx, update the viewProfile function:
+const viewProfile = (student) => {
+  console.log('View button clicked for student:', student);
+  console.log('Navigating with ID:', student.id);
+  console.log('Student also has studentId:', student.studentId);
+  navigate(`/admin/student-profile/${student.id}`);
+};
 
   const goBack = () => {
     navigate('/admin/student-list');

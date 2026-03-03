@@ -3,13 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiArrowLeft, FiUser } from 'react-icons/fi';
 
-
 // Components
 import StudentProfileCard from '../components/StudentProfileCard';
 import StudentTabs from '../components/StudentTabs';
 import WithdrawModal from '../components/WithdrawModal';
 import DepositModal from '../components/DepositModal';
-
 
 // Tab Components
 import ProfileTab from '../components/tabs/ProfileTab';
@@ -34,11 +32,40 @@ const StudentProfile = () => {
   const [showDepositModal, setShowDepositModal] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState('');
 
+  // Debug logging
+  console.log('=== StudentProfile Debug ===');
+  console.log('studentId from useParams:', studentId);
+  console.log('Type of studentId:', typeof studentId);
+  console.log('allStudents count:', allStudents.length);
+  console.log('allStudents sample:', allStudents.slice(0, 2));
+
   // Find student by ID
   useEffect(() => {
-    const foundStudent = allStudents.find(s => 
-      s.id === studentId || s.studentId === studentId
-    );
+    if (!studentId) {
+      console.log('No studentId provided in URL');
+      setStudent(null);
+      return;
+    }
+
+    console.log('Searching for student with ID:', studentId);
+    
+    // Try multiple matching strategies
+    const foundStudent = allStudents.find(s => {
+      // Direct match
+      if (s.id === studentId) return true;
+      if (s.studentId === studentId) return true;
+      
+      // Convert both to strings for comparison
+      if (String(s.id) === String(studentId)) return true;
+      if (String(s.studentId) === String(studentId)) return true;
+      
+      // If studentId is a number in the URL but string in data
+      if (!isNaN(Number(studentId)) && s.id === Number(studentId)) return true;
+      
+      return false;
+    });
+
+    console.log('Found student:', foundStudent);
     setStudent(foundStudent);
   }, [studentId, allStudents]);
 
@@ -105,7 +132,7 @@ const StudentProfile = () => {
         return <IndividualReportTab student={student} />;
       case 'override':
         return <OverrideTab />;
-        case 'deductions':
+      case 'deductions':
         return <DeductionHistoryTab student={student} />;
       default:
         return null;
@@ -127,7 +154,12 @@ const StudentProfile = () => {
         <div className="bg-white rounded-xl shadow-md p-12 text-center">
           <FiUser size={48} className="mx-auto text-gray-300 mb-4" />
           <h3 className="text-xl font-semibold text-gray-700 mb-2">Student Not Found</h3>
-          <p className="text-gray-500">The student you're looking for doesn't exist.</p>
+          <p className="text-gray-500">
+            {studentId ? `Student ID "${studentId}" not found.` : 'No student ID provided.'}
+          </p>
+          <p className="text-sm text-gray-400 mt-2">
+            Debug: URL param: {studentId || 'empty'} | Type: {typeof studentId}
+          </p>
           <button
             onClick={goBack}
             className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
