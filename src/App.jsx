@@ -12,6 +12,7 @@ import StudentList from "./pages/StudentList";
 import ClassStudents from "./pages/ClassStudents";
 import Addstudent from "./pages/Addstudent";
 import StudentInformation from "./pages/StudentInformation";
+import StudentProfile from "./pages/StudentProfile";
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
             {/* Specific Class View (/admin/student-list/JSS1A) */}
             <Route path="student-list/:className" element={<ClassStudents />} />
             <Route path="add-student" element={<Addstudent />} />
+            <Route path="student-profile/:id" element={<StudentProfile />} />
             <Route path="student-info" element={<StudentInformation />} />
             <Route path="purchase" element={<MyPurchase />} />
           </Route>

@@ -17,10 +17,17 @@ const SpecialShoppingTab = ({ student, onProcessDeduction }) => {
       return;
     }
 
-    const confirmMessage = `Process special deduction of ₦${Number(customDeduction).toLocaleString()} from ${student.name}'s account?\n\nThis is a special deduction with NO LIMIT.`;
+    const confirmMessage = `Process special deduction 
+    of ₦${Number(customDeduction).toLocaleString()} from
+     ${student.name}'s account?\n\nThis is a special deduction with NO LIMIT.`;
     
     if (window.confirm(confirmMessage)) {
-      onProcessDeduction(Number(customDeduction), deductionDescription);
+      //Dispatch withdrawal action with all needed data
+      onProcessDeduction(
+        Number(customDeduction),
+         deductionDescription || 'Special shopping deduction (No limit)');
+
+         // Clear inputs
       setCustomDeduction('');
       setDeductionDescription('');
     }

@@ -1,6 +1,5 @@
 import React from 'react';
 import { FiUser, FiHome, FiCalendar, FiToggleLeft, FiCreditCard } from 'react-icons/fi';
-
 const StudentProfileCard = ({ student, onDeposit, onWithdraw, onToggleStatus }) => {
   return (
     <div className="bg-white rounded-xl shadow-md p-6">

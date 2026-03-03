@@ -7,6 +7,7 @@ const StudentTabs = ({ activeTab, onTabChange }) => {
     { id: 'shop', label: 'Special Shopping', icon: <FiShoppingBag className="inline mr-2" /> },
     { id: 'history', label: 'Purchase History', icon: <FiList className="inline mr-2" /> },
     { id: 'reports', label: 'Individual Report', icon: <FiPieChart className="inline mr-2" /> },
+    { id: 'deductions', label: 'Deduction History', icon: <FiList className="inline mr-2" /> },
     { id: 'override', label: 'Override', icon: <FiLock className="inline mr-2" /> }
   ];
 

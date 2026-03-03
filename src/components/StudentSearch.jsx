@@ -1,7 +1,10 @@
 import React from 'react';
 import { FiSearch } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 
 const StudentSearch = ({ searchTerm, onSearchChange, onSearch, filteredStudents, onSelectStudent }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="bg-white rounded-xl shadow-md p-6 mb-6">
       <form onSubmit={onSearch} className="flex gap-3">
@@ -29,16 +32,29 @@ const StudentSearch = ({ searchTerm, onSearchChange, onSearch, filteredStudents,
           {filteredStudents.map(student => (
             <div
               key={student.id}
-              onClick={() => {
-                onSelectStudent(student);
-                onSearchChange(''); // Clear search after selection
-              }}
-              className="p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0 transition-colors"
+              className="p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0 flex justify-between items-center transition-colors"
             >
-              <p className="font-medium">{student.name}</p>
-              <p className="text-sm text-gray-500">
-                ID: {student.studentId || student.id} | Class: {student.className} | House: {student.house}
-              </p>
+              <div 
+                className="flex-1"
+                onClick={() => {
+                  onSelectStudent(student);
+                  onSearchChange('');
+                }}
+              >
+                <p className="font-medium">{student.name}</p>
+                <p className="text-sm text-gray-500">
+                  ID: {student.studentId || student.id} | Class: {student.className} | House: {student.house}
+                </p>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/admin/student-profile/${student.id}`);
+                }}
+                className="text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded-full transition-colors"
+              >
+                View Full Profile →
+              </button>
             </div>
           ))}
         </div>
