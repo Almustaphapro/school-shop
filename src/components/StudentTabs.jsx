@@ -5,9 +5,7 @@ const StudentTabs = ({ activeTab, onTabChange }) => {
   const tabs = [
     { id: 'profile', label: 'Profile Details', icon: <FiUser className="inline mr-2" /> },
     { id: 'shop', label: 'Special Shopping', icon: <FiShoppingBag className="inline mr-2" /> },
-    { id: 'history', label: 'Purchase History', icon: <FiList className="inline mr-2" /> },
-    { id: 'reports', label: 'Individual Report', icon: <FiPieChart className="inline mr-2" /> },
-    { id: 'deductions', label: 'Deduction History', icon: <FiList className="inline mr-2" /> },
+    { id: 'transactions', label: 'Transactions', icon: <FiList className="inline mr-2" /> },
     { id: 'override', label: 'Override', icon: <FiLock className="inline mr-2" /> }
   ];
 

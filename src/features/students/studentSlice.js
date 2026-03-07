@@ -2,28 +2,35 @@ import { createSlice } from "@reduxjs/toolkit";
 import { studentData as initialData } from "../../data/studentData";
 
 // Convert the static data object into an array for Redux
-const initialStudents = Object.values(initialData).flat();
-
-// Add transaction history to each student
-const studentsWithHistory = initialStudents.map(student => ({
-  ...student,
-  transactions: student.transactions || [
-    // Sample transactions for existing students
-    { 
-      id: `txn_${Date.now()}_1`, 
-      date: new Date().toISOString().split('T')[0], 
-      type: 'deposit', 
-      description: 'Initial balance', 
-      amount: student.balance || 0,
-      balance: student.balance || 0
-    }
-  ]
-}));
+const initialStudents = Object.entries(initialData).flatMap(([className, students]) => 
+  students.map(student => ({
+    id: student.id,
+    studentId: student.studentId,
+    name: student.name,
+    house: student.house,
+    status: student.status,
+    balance: student.balance,
+    class: className,
+    className: className,
+    transactions: student.transactions || [
+      {
+        id: `txn_${Date.now()}_${student.id}`,
+        date: new Date().toISOString().split('T')[0],
+        type: 'credit',
+        category: 'deposit',
+        description: 'Initial balance',
+        amount: student.balance || 0,
+        balance: student.balance || 0,
+        status: 'completed'
+      }
+    ]
+  }))
+);
 
 const studentSlice = createSlice({
   name: "students",
   initialState: {
-    students: studentsWithHistory,
+    students: initialStudents,
     loading: false,
     error: null
   },
@@ -31,25 +38,22 @@ const studentSlice = createSlice({
     addStudent: (state, action) => {
       const newStudent = {
         ...action.payload,
+        class: action.payload.class || action.payload.className,
+        className: action.payload.className || action.payload.class,
         transactions: [
           {
-            id: `txn_${Date.now()}`,
+            id: `txn_${Date.now()}_${action.payload.id}`,
             date: new Date().toISOString().split('T')[0],
-            type: 'deposit',
+            type: 'credit',
+            category: 'deposit',
             description: 'Initial deposit',
             amount: action.payload.balance || 0,
-            balance: action.payload.balance || 0
+            balance: action.payload.balance || 0,
+            status: 'completed'
           }
         ]
       };
       state.students.push(newStudent);
-    },
-    
-    updateStudent: (state, action) => {
-      const index = state.students.findIndex(s => s.id === action.payload.id);
-      if (index !== -1) {
-        state.students[index] = action.payload;
-      }
     },
     
     toggleStudentStatus: (state, action) => {
@@ -75,7 +79,8 @@ const studentSlice = createSlice({
           category: 'deposit',
           description: 'Deposit',
           amount: amount,
-          balance: newBalance
+          balance: newBalance,
+          status: 'completed'
         });
       }
     },
@@ -96,7 +101,8 @@ const studentSlice = createSlice({
           category: isSpecial ? 'special' : 'regular',
           description: description || (isSpecial ? 'Special shopping' : 'Purchase'),
           amount: amount,
-          balance: newBalance
+          balance: newBalance,
+          status: 'completed'
         });
       }
     }
@@ -105,7 +111,6 @@ const studentSlice = createSlice({
 
 export const { 
   addStudent, 
-  updateStudent, 
   toggleStudentStatus, 
   depositMoney, 
   withdrawMoney 

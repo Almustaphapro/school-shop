@@ -48,7 +48,7 @@ const Sidebar = ({ role }) => {
         icon: <FiBarChart2 />,
         key: "report",
         children: [
-          { name: "For Sale", path: "/admin/for-sale" },
+           { name: "Sales Report", path: "/admin/sales-report" },
           { name: "Comprehensive Report", path: "/admin/comprehensive-report" },
         ],
       },

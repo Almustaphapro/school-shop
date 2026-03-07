@@ -5,9 +5,14 @@ const StudentProfileCard = ({ student, onDeposit, onWithdraw, onToggleStatus }) 
     <div className="bg-white rounded-xl shadow-md p-6">
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-4">
-          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-            <FiUser size={32} className="text-blue-600" />
-          </div>
+         
+<div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden">
+  {student.image ? (
+    <img src={student.image} alt={student.name} className="w-full h-full object-cover" />
+  ) : (
+    <FiUser size={32} className="text-blue-600" />
+  )}
+</div>
           <div>
             <h2 className="text-2xl font-bold text-gray-800">{student.name}</h2>
             <p className="text-gray-500">Student ID: {student.studentId || student.id}</p>

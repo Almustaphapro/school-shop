@@ -12,10 +12,9 @@ import DepositModal from '../components/DepositModal';
 // Tab Components
 import ProfileTab from '../components/tabs/ProfileTab';
 import SpecialShoppingTab from '../components/tabs/SpecialShoppingTab';
-import PurchaseHistoryTab from '../components/tabs/PurchaseHistoryTab';
-import IndividualReportTab from '../components/tabs/IndividualReportTab';
+import TransactionReportTab from '../components/tabs/TransactionReportTab';
 import OverrideTab from '../components/tabs/OverrideTab';
-import DeductionHistoryTab from '../components/tabs/DeductionHistoryTab';
+
 
 // Actions
 import { depositMoney, toggleStudentStatus, withdrawMoney } from '../features/students/studentSlice';
@@ -69,32 +68,49 @@ const StudentProfile = () => {
     setStudent(foundStudent);
   }, [studentId, allStudents]);
 
-  const handleDeposit = (amount, description) => {
-    dispatch(depositMoney({ id: student.id, amount }));
-    alert(`✅ ₦${amount.toLocaleString()} deposited successfully!`);
-  };
+  
 
-  const handleWithdraw = () => {
-    if (!withdrawAmount || isNaN(withdrawAmount)) {
-      alert('Please enter a valid amount');
-      return;
-    }
-    
-    if (Number(withdrawAmount) > (student.balance || 0)) {
-      alert('Insufficient balance!');
-      return;
-    }
+const handleDeposit = (amount, description) => {
+  dispatch(depositMoney({ 
+    id: student.id, 
+    amount,
+    description: description || 'Deposit'
+  }));
+  alert(`✅ ₦${amount.toLocaleString()} deposited successfully!`);
+};
 
-    dispatch(withdrawMoney({ 
-      id: student.id, 
-      amount: Number(withdrawAmount),
-      description: 'Manual withdrawal'
-    }));
-    
-    alert(`✅ Withdrawal of ₦${withdrawAmount} processed successfully!`);
-    setShowWithdrawModal(false);
-    setWithdrawAmount('');
-  };
+const handleWithdraw = () => {
+  if (!withdrawAmount || isNaN(withdrawAmount)) {
+    alert('Please enter a valid amount');
+    return;
+  }
+  
+  if (Number(withdrawAmount) > (student.balance || 0)) {
+    alert('Insufficient balance!');
+    return;
+  }
+
+  dispatch(withdrawMoney({ 
+    id: student.id, 
+    amount: Number(withdrawAmount),
+    description: 'Manual withdrawal',
+    isSpecial: false
+  }));
+  
+  alert(`✅ Withdrawal of ₦${withdrawAmount} processed successfully!`);
+  setShowWithdrawModal(false);
+  setWithdrawAmount('');
+};
+
+const handleSpecialDeduction = (amount, description) => {
+  dispatch(withdrawMoney({ 
+    id: student.id, 
+    amount: amount,
+    description: description || 'Special shopping deduction',
+    isSpecial: true
+  }));
+  alert(`✅ Special deduction of ₦${amount.toLocaleString()} processed successfully!`);
+};
 
   const handleToggleStatus = () => {
     if (window.confirm(`Are you sure you want to ${student.status ? 'deactivate' : 'activate'} ${student.name}?`)) {
@@ -102,42 +118,30 @@ const StudentProfile = () => {
     }
   };
 
-  const handleSpecialDeduction = (amount, description) => {
-    dispatch(withdrawMoney({ 
-      id: student.id, 
-      amount: amount,
-      description: description || 'Special shopping deduction (No limit)',
-      isSpecial: true
-    }));
-    alert(`✅ Special deduction of ₦${amount.toLocaleString()} processed successfully!`);
-  };
+  
 
   const goBack = () => navigate(-1);
 
   // Render the appropriate tab based on activeTab
   const renderTab = () => {
-    if (!student) return null;
-    
-    switch(activeTab) {
-      case 'profile':
-        return <ProfileTab student={student} />;
-      case 'shop':
-        return <SpecialShoppingTab 
-                 student={student} 
-                 onProcessDeduction={handleSpecialDeduction} 
-               />;
-      case 'history':
-        return <PurchaseHistoryTab />;
-      case 'reports':
-        return <IndividualReportTab student={student} />;
-      case 'override':
-        return <OverrideTab />;
-      case 'deductions':
-        return <DeductionHistoryTab student={student} />;
-      default:
-        return null;
-    }
-  };
+  if (!student) return null;
+  
+  switch(activeTab) {
+    case 'profile':
+      return <ProfileTab student={student} />;
+    case 'shop':
+      return <SpecialShoppingTab 
+               student={student} 
+               onProcessDeduction={handleSpecialDeduction} 
+             />;
+    case 'transactions': // New combined tab
+      return <TransactionReportTab student={student} />;
+    case 'override':
+      return <OverrideTab />;
+    default:
+      return null;
+  }
+};
 
   if (!student) {
     return (

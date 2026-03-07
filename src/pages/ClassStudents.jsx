@@ -41,11 +41,15 @@ const ClassStudents = () => {
     setShowDepositModal(true);
   };
 
-  const confirmDeposit = (id, amount, description) => {
-    dispatch(depositMoney({ id, amount }));
-    alert(`✅ ₦${amount.toLocaleString()} deposited successfully!`);
-  };
-
+ // In ClassStudents.jsx, update the confirmDeposit function:
+const confirmDeposit = (id, amount, description) => {
+  dispatch(depositMoney({ id, amount }));
+  
+  // Show success message with transaction details
+  alert(`✅ ₦${amount.toLocaleString()} deposited successfully!
+  
+Transaction has been recorded in the student's history.`);
+};
   // In ClassStudents.jsx, update the viewProfile function:
 const viewProfile = (student) => {
   console.log('View button clicked for student:', student);
